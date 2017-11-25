@@ -3,6 +3,16 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Piotr Słuja</Authors>
+    <Company />
+    <Description>Thread-safe generic object pool</Description>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/psluja/psluja.ObjectPools/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/psluja/psluja.ObjectPools</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/psluja/psluja.ObjectPools</RepositoryUrl>
+    <RepositoryType>github</RepositoryType>
+    <PackageTags>object pool</PackageTags>
+    <AssemblyVersion>1.0.0.1</AssemblyVersion>
+    <FileVersion>1.0.0.1</FileVersion>
   </PropertyGroup>
 
 </Project>
