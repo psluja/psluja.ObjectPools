@@ -10,8 +10,8 @@ namespace psluja.ObjectPools
     public class DynamicObjectPool<T> : ObjectPool<T> where T : class
     {
         private readonly Func<T> _objectGenerator;
-        private readonly int _poolSize;
-        private readonly int _poolMaxSize;
+        private readonly uint _poolSize;
+        private readonly uint _poolMaxSize;
 
         private readonly ConcurrentQueue<TaskCompletionSource<T>> _consumerQueue;
 
@@ -26,9 +26,15 @@ namespace psluja.ObjectPools
         public int ObjectsDisposedCounter => _objectsDisposedCounter;
         public int ObjectsMaxCounter => _objectsMaxCounter;
 
-        public DynamicObjectPool(Func<T> objectFactory, int poolSize, int poolMaxSize)
+        public DynamicObjectPool(Func<T> objectFactory, uint poolSize, uint poolMaxSize)
             :base(new List<T>())
         {
+            if (poolSize == 0 || poolMaxSize == 0)
+                throw new ArgumentOutOfRangeException($"{nameof(poolSize)} and {nameof(poolMaxSize)} must be greater than 0");
+
+            if (poolSize > poolMaxSize)
+                throw new ArgumentOutOfRangeException(nameof(poolSize), poolSize, $"{nameof(poolSize)} is greater than {nameof(poolMaxSize)}");
+
             _consumerQueue = new ConcurrentQueue<TaskCompletionSource<T>>();
             _objectGenerator = objectFactory;
             _poolSize = poolSize;
