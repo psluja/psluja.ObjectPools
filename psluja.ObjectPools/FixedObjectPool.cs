@@ -8,14 +8,11 @@ namespace psluja.ObjectPools
 {
     public class FixedObjectPool<T> : ObjectPool<T> where T : class
     {
-        private readonly ConcurrentQueue<TaskCompletionSource<T>> _consumerQueue;
-
         private readonly object _putLocker = new object();
         private readonly object _getLocker = new object();
 
-        public FixedObjectPool(IEnumerable<T> objects):base(objects)
+        public FixedObjectPool(IEnumerable<T> objects) : base(objects)
         {
-            _consumerQueue = new ConcurrentQueue<TaskCompletionSource<T>>();
         }
 
         public override Task<T> GetObject(CancellationToken token)
@@ -32,11 +29,11 @@ namespace psluja.ObjectPools
 
                 token.Register(tts =>
                 {
-                    ((TaskCompletionSource<T>) tts).TrySetCanceled();
-                },ts);
+                    ((TaskCompletionSource<T>)tts).TrySetCanceled();
+                }, ts);
 
                 _consumerQueue.Enqueue(ts);
-                
+
                 return ts.Task;
             }
         }
@@ -53,9 +50,10 @@ namespace psluja.ObjectPools
                     return;
                 }
 
-                if(!_objects.Contains(item))
+                if (!_objects.Contains(item))
                     _objects.Add(item);
             }
         }
+
     }
 }

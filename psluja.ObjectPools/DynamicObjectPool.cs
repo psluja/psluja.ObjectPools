@@ -13,8 +13,6 @@ namespace psluja.ObjectPools
         private readonly uint _poolSize;
         private readonly uint _poolMaxSize;
 
-        private readonly ConcurrentQueue<TaskCompletionSource<T>> _consumerQueue;
-
         private readonly object _putLocker = new object();
         private readonly object _getLocker = new object();
 
@@ -35,7 +33,6 @@ namespace psluja.ObjectPools
             if (poolSize > poolMaxSize)
                 throw new ArgumentOutOfRangeException(nameof(poolSize), poolSize, $"{nameof(poolSize)} is greater than {nameof(poolMaxSize)}");
 
-            _consumerQueue = new ConcurrentQueue<TaskCompletionSource<T>>();
             _objectGenerator = objectFactory;
             _poolSize = poolSize;
             _poolMaxSize = poolMaxSize;

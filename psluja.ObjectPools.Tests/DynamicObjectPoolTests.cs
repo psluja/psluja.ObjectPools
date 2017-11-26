@@ -21,6 +21,8 @@ namespace psluja.ObjectPools
             Assert.AreEqual(0,myPool.ObjectsDisposedCounter, 0, "ObjectsDisposedCounter");
             Assert.AreEqual(1,myPool.ObjectsCreatedCounter, 1, "ObjectsCreatedCounter");
             Assert.AreEqual(1,myPool.ObjectsMaxCounter, 1, "ObjectsMaxCounter");
+
+            myPool.Dispose();
         }
 
         [TestMethod]
@@ -33,6 +35,8 @@ namespace psluja.ObjectPools
             Assert.AreEqual(0,myPool.ObjectsDisposedCounter, "ObjectsDisposedCounter");
             Assert.AreEqual(3,myPool.ObjectsCreatedCounter, "ObjectsCreatedCounter");
             Assert.AreEqual(3, myPool.ObjectsMaxCounter, "ObjectsMaxCounter");
+
+            myPool.Dispose();
         }
 
         [TestMethod]
@@ -61,6 +65,8 @@ namespace psluja.ObjectPools
             Assert.AreEqual(0,myPool.ObjectsDisposedCounter, "ObjectsDisposedCounter");
             Assert.AreEqual(2,myPool.ObjectsCreatedCounter, "ObjectsCreatedCounter");
             Assert.AreEqual(3,myPool.ObjectsMaxCounter, "ObjectsMaxCounter");
+
+            myPool.Dispose();
         }
 
         [TestMethod]
@@ -80,6 +86,8 @@ namespace psluja.ObjectPools
             Assert.AreEqual(7,myPool.ObjectsDisposedCounter, "ObjectsDisposedCounter");
             Assert.AreEqual(0,myPool.ObjectsCreatedCounter, "ObjectsCreatedCounter");
             Assert.AreEqual(3,myPool.ObjectsMaxCounter, "ObjectsMaxCounter");
+
+            myPool.Dispose();
         }
 
         [TestMethod]
@@ -98,6 +106,8 @@ namespace psluja.ObjectPools
             Assert.AreEqual(0, myPool.ObjectsDisposedCounter, "ObjectsDisposedCounter");
             Assert.AreEqual(0, myPool.ObjectsCreatedCounter, "ObjectsCreatedCounter");
             Assert.AreEqual(10, myPool.ObjectsMaxCounter, "ObjectsMaxCounter");
+
+            myPool.Dispose();
         }
 
         [TestMethod]
@@ -111,6 +121,8 @@ namespace psluja.ObjectPools
             var obj2 = await myPool.GetObject(cancellationTokenSource.Token);
 
             Assert.IsNull(obj2);
+
+            myPool.Dispose();
         }
     }
 }

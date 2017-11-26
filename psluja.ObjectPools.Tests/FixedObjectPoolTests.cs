@@ -14,6 +14,8 @@ namespace psluja.ObjectPools
         {
             var myPool = new FixedObjectPool<MyHeavyObject>(new[] { new MyHeavyObject(1), new MyHeavyObject(2), new MyHeavyObject(3) });
             await Tester.PoolTester(myPool, 20);
+
+            myPool.Dispose();
         }
 
     }
