@@ -20,16 +20,14 @@ namespace psluja.ObjectPools.Utils
         {
             ActionBlock<IObjectPool<MyHeavyObject>> actionBlock = new ActionBlock<IObjectPool<MyHeavyObject>>(pool =>
             {
-                var task = pool.GetObject(CancellationToken.None);
-                task.Wait();
-                var obj = task.Result;
-
-                obj.Begin();
-                obj.SomeFastMethod();
-                obj.SomeSlowMethod();
-                obj.End();
-
-                pool.PutObject(obj);
+                using (Usage<MyHeavyObject> objUsage = pool.UseObjectSync())
+                {
+                    var obj = objUsage.Object;
+                    obj.Begin();
+                    obj.SomeFastMethod();
+                    obj.SomeSlowMethod();
+                    obj.End();
+                }
 
             }, new ExecutionDataflowBlockOptions
             {
