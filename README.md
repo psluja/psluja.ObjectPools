@@ -35,7 +35,7 @@ Second method `PutObject` will put object back into the pool.
 >	objUsage.Object.SomeFastMethod();
 > }
 >
-> Notice there is no `PutObject` call - this is because `Usage<T>`will put our object into the pool for us at dispose.
+> Notice there is no `PutObject` call - this is because `Usage<T>` will put our object into the pool for us at dispose.
 
 
 FixedObjectPool
@@ -55,4 +55,20 @@ This is common scenario where you create fixed collection of object and want to 
 	      obj.SomeSlowMethod();
 	      obj.End();
 	  }
+
+DynamicObjectPool
+-------------
+This is more intresting implementation. `DynamicObjectPool` can create or dispose object for you. See constructor below:
+
+	public DynamicObjectPool(Func<T> objectFactory, uint poolSize, uint poolMaxSize)
+	
+There are three parameters:
+- `objectFactory` is the method that is invoked when new object is needed,
+- `poolSize` defines number of objects above wchich pool stops creating new object
+- `poolMaxSize` defines number of objects above which pool will start disposing objects.
+
+> Note
+> Shouldn't there be only one parameter?
+> The second parameter `poolMaxSize` is only valid when user decides to put additional object instances to the pool. If user 
+> decides that there is need for extra more object then is absolutly ok to call `PutObject` with newly created instance and pool will use that object. 
 
