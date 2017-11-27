@@ -1,6 +1,6 @@
 psluja.ObjectPools
 ===================
-Thread-safe generic object pool helps sharing object instances among multiple threads. Large object that are costly to create, are state-full and are not thread safe are difficult to use in multi thread environment. This little, lightweight library will help to achieve that.
+Thread-safe generic object pool helps sharing object instances among multiple threads. Large objects that are costly to create, state-full, not thread safe are difficult to use in mult-thread environment. This little, lightweight library will help share limited number of objects between many threads.
 
 Idea
 -------------
