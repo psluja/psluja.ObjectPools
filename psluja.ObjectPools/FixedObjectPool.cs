@@ -8,7 +8,6 @@ namespace psluja.ObjectPools
 {
     public class FixedObjectPool<T> : ObjectPool<T> where T : class
     {
-        private readonly object _putLocker = new object();
         private readonly object _getLocker = new object();
 
         public FixedObjectPool(IEnumerable<T> objects) : base(objects)
@@ -40,20 +39,17 @@ namespace psluja.ObjectPools
 
         public override void PutObject(T item)
         {
-            lock (_putLocker)
+            TaskCompletionSource<T> consumerTaskCompletionSource;
+            while (_consumerQueue.TryDequeue(out consumerTaskCompletionSource) &&
+                    consumerTaskCompletionSource?.Task?.IsCompleted == false)
             {
-                TaskCompletionSource<T> consumerTaskCompletionSource;
-                while (_consumerQueue.TryDequeue(out consumerTaskCompletionSource) &&
-                       consumerTaskCompletionSource?.Task?.IsCompleted == false)
-                {
-                    consumerTaskCompletionSource.TrySetResult(item);
-                    return;
-                }
-
-                if (!_objects.Contains(item))
-                    _objects.Add(item);
+                consumerTaskCompletionSource.TrySetResult(item);
+                return;
             }
-        }
 
+            if (!_objects.Contains(item))
+                _objects.Add(item);
+
+        }
     }
 }

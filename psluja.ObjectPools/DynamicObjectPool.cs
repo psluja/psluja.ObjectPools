@@ -12,8 +12,7 @@ namespace psluja.ObjectPools
         private readonly Func<T> _objectGenerator;
         private readonly uint _poolSize;
         private readonly uint _poolMaxSize;
-
-        private readonly object _putLocker = new object();
+        
         private readonly object _getLocker = new object();
 
         private int _objectsCreatedCounter;
@@ -25,7 +24,7 @@ namespace psluja.ObjectPools
         public int ObjectsMaxCounter => _objectsMaxCounter;
 
         public DynamicObjectPool(Func<T> objectFactory, uint poolSize, uint poolMaxSize)
-            :base(new List<T>())
+            : base(new List<T>())
         {
             if (poolSize == 0 || poolMaxSize == 0)
                 throw new ArgumentOutOfRangeException($"{nameof(poolSize)} and {nameof(poolMaxSize)} must be greater than 0");
@@ -70,32 +69,28 @@ namespace psluja.ObjectPools
 
         public override void PutObject(T item)
         {
-            lock (_putLocker)
+            TaskCompletionSource<T> consumerTaskCompletionSource;
+            while (_consumerQueue.TryDequeue(out consumerTaskCompletionSource) &&
+                   consumerTaskCompletionSource?.Task?.IsCompleted == false)
             {
-                TaskCompletionSource<T> consumerTaskCompletionSource;
-                while (_consumerQueue.TryDequeue(out consumerTaskCompletionSource) &&
-                       consumerTaskCompletionSource?.Task?.IsCompleted == false)
-                {
-                    consumerTaskCompletionSource.TrySetResult(item);
-                    return;
-                }
+                consumerTaskCompletionSource.TrySetResult(item);
+                return;
+            }
 
-                // if pool is full then dispose and do not store this object
-                if (_objects.Count >= _poolMaxSize)
-                {
-                    (item as IDisposable)?.Dispose();
+            // if pool is full then dispose and do not store this object
+            if (_objects.Count >= _poolMaxSize)
+            {
+                (item as IDisposable)?.Dispose();
 
-                    Interlocked.Increment(ref _objectsDisposedCounter);
-                    return;
-                }
+                Interlocked.Increment(ref _objectsDisposedCounter);
+                return;
+            }
 
-                if (!_objects.Contains(item))
-                {
-                    _objects.Add(item);
-                    Interlocked.Exchange(ref _objectsMaxCounter, Math.Max(_objects.Count, _objectsMaxCounter));
-                }
+            if (!_objects.Contains(item))
+            {
+                _objects.Add(item);
+                Interlocked.Exchange(ref _objectsMaxCounter, Math.Max(_objects.Count, _objectsMaxCounter));
             }
         }
-
     }
 }
