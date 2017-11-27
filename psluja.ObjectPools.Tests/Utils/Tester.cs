@@ -18,9 +18,9 @@ namespace psluja.ObjectPools.Utils
 
         public static async Task PoolTester(IObjectPool<MyHeavyObject> myPool, int threads)
         {
-            ActionBlock<IObjectPool<MyHeavyObject>> actionBlock = new ActionBlock<IObjectPool<MyHeavyObject>>(pool =>
+            ActionBlock<IObjectPool<MyHeavyObject>> actionBlock = new ActionBlock<IObjectPool<MyHeavyObject>>(async pool =>
             {
-                using (Usage<MyHeavyObject> objUsage = pool.UseObjectSync())
+                using (Usage<MyHeavyObject> objUsage = await pool.UseObject())
                 {
                     var obj = objUsage.Object;
                     obj.Begin();

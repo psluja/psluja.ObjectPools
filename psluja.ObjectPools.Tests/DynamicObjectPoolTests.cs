@@ -101,7 +101,7 @@ namespace psluja.ObjectPools
                 myPool.PutObject(new MyHeavyObject(i));
             }
 
-            await Tester.PoolTester(myPool, 50);
+            await Tester.PoolTester(myPool, 20);
 
             Assert.AreEqual(0, myPool.ObjectsDisposedCounter, "ObjectsDisposedCounter");
             Assert.AreEqual(0, myPool.ObjectsCreatedCounter, "ObjectsCreatedCounter");
