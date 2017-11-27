@@ -33,6 +33,7 @@ Second method `PutObject` will put object back into the pool.
 > {
 >	objUsage.Object.SomeFastMethod();
 > }`
+>
 > Notice there is no `PutObject` call - this is because `Usage<T>` will put our object into the pool for us at dispose.
 
 
@@ -67,7 +68,7 @@ There are three parameters:
 
 > **Note**
 >
-> Shouldn't there be only one parameter?
+> Shouldn't be there only one parameter?
 > The second parameter `poolMaxSize` is only valid when user decides to put additional object instances to the pool. If user 
 > decides that there is need for extra more object then is absolutly ok to call `PutObject` with newly created instance and pool will use that object. 
 
