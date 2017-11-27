@@ -29,10 +29,10 @@ Second method `PutObject` will put object back into the pool.
 >
 > You can use one of the extension method  `Task<Usage<T>> UseObject<T>`like this:
 >
-> using (Usage<MyHeavyObject> objUsage = await pool.UseObject())
+> `using (Usage<MyHeavyObject> objUsage = await pool.UseObject())
 > {
 >	objUsage.Object.SomeFastMethod();
-> }
+> }`
 > Notice there is no `PutObject` call - this is because `Usage<T>` will put our object into the pool for us at dispose.
 
 
